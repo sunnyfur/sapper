@@ -9,10 +9,11 @@ const Cell = ({ typeCell, onClick }: { typeCell: TypeCell; onClick: (id: number)
   const [img, setImg] = useState<string | null>()
 
   useEffect(() => {
-    setImg(`../../assets/img/cell_${typeCell.type}.png`)
-  }, [typeCell])
+    import(`../../assets/img/cell_${typeCell.type}.png`).then((image) => setImg(image.default))
+    // setImg(`../../assets/img/cell_${typeCell.type}.png`)
+  }, [typeCell.type])
   const setImage = {
-    backgroundImage: img ? require(img) : '',
+    backgroundImage: img ? `url(${img})` : '',
   }
   return <div className={styles.cell} style={setImage} onClick={handleClick} />
 }
