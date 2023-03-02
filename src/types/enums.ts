@@ -1,4 +1,4 @@
-export enum TypeCell {
+export enum EnumCell {
   common = 'common',
   flag = 'flag',
   mine = 'mine',
@@ -7,5 +7,12 @@ export enum TypeCell {
   pressed = 'pressed',
   question = 'question',
   qpressed = 'question_pressed',
-  cell1 = 'cell1',
+  cell1 = '1',
+  cell2 = '2',
+  cell3 = '3',
+  cell4 = '4',
+  cell5 = '5',
+  cell6 = '6',
+  cell7 = '7',
+  cell8 = '8',
 }
