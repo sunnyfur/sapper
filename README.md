@@ -1,4 +1,5 @@
 # Игра сапер
+https://sunnyfur.github.io/sapper/
 ![image](https://user-images.githubusercontent.com/45349348/222950924-a4d7c8d7-92d5-402f-a4c9-822e391ab18c.png)
 
 ## Для запуска игры нужно:
