@@ -1,3 +1,4 @@
+import { timeActions } from './../reducers/timeReducer'
 import { cellsAll, cellsSelector } from './../reducers/gameReducer'
 import { generateEmpty, genereteMines, showMines } from './../../utils/utils'
 import { EnumCell, SmileStatus } from './../../types/enums'
@@ -32,7 +33,7 @@ let timer: ReturnType<typeof setInterval> | null = null
 let timerEnd: ReturnType<typeof setInterval> | null = null
 
 const startTimer = (): AppThunk => (dispatch) => {
-  timer = setInterval(() => dispatch(gameActions.incTime()), 1000)
+  timer = setInterval(() => dispatch(timeActions.incTime()), 1000)
   timerEnd = setTimeout(() => dispatch(isLoose()), 1000 * MAXTIME)
 }
 const stopTimer = () => {
@@ -75,6 +76,7 @@ export const newGame = (): AppThunk => (dispatch) => {
   dispatch(gameActions.setCells(generateEmpty()))
   dispatch(gameActions.newGame())
   stopTimer()
+  dispatch(timeActions.stop())
 }
 
 export const isWin = (): AppThunk => (dispatch, GetRootState) => {

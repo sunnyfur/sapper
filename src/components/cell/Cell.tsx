@@ -41,7 +41,7 @@ const Cell = ({
   }
 
   useEffect(() => {
-    import(`../../assets/img/cell_${typeCell.type}.png`).then((image) => setImg(image.default))
+    import(`/public/img/cell_${typeCell.type}.png`).then((image) => setImg(image.default))
   }, [typeCell.type])
   const setImage = {
     backgroundImage: img ? `url(${img})` : '',

@@ -10,10 +10,18 @@ import { newGame } from '../../store/actions/gameActions'
 const HeaderGame = () => {
   const [img, setImg] = useState<string | null>()
   const { isPressed } = useAppSelector((state) => state.mouse)
-  const { time, minesCount, smileStatus } = useAppSelector((state) => state.game)
+  const { time } = useAppSelector((state) => state.timer)
+  const { minesCount } = useAppSelector(
+    (state) => state.game,
+    (oldValue, newValue) => oldValue.minesCount == newValue.minesCount,
+  )
+  const { smileStatus } = useAppSelector(
+    (state) => state.game,
+    (oldValue, newValue) => oldValue.smileStatus == newValue.smileStatus,
+  )
 
   useEffect(() => {
-    import(`../../assets/img/${smileStatus}.png`).then((image) => setImg(image.default))
+    import(`/public/img/${smileStatus}.png`).then((image) => setImg(image.default))
   }, [smileStatus])
   const setImage = {
     backgroundImage: img ? `url(${img})` : '',
