@@ -1,0 +1,30 @@
+@import '../../assets/styles/vars';
+
+.game__header {
+  display: flex;
+  justify-content: space-between;
+  min-width: 100%;
+  background-color: $bg-color;
+  padding: 5px;
+  box-sizing: border-box;
+  align-items: stretch;
+  border: $border-size inset;
+}
+
+.smile {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.numbers {
+  display: flex;
+}
+.numbers:last-of-type {
+  justify-content: flex-end;
+}
+
+.number {
+  height: 100%;
+}

@@ -1,8 +1,9 @@
+@import '../../assets/styles/vars';
+
 .field {
   display: grid;
   grid-template-columns: repeat(16, 1.5rem);
   grid-template-rows: repeat(16, 1.5rem);
-
-  // padding: 0;
   justify-content: flex-start;
+  border: $border-size inset;
 }

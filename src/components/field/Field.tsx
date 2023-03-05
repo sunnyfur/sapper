@@ -1,67 +1,77 @@
-import { useCallback, useEffect, useState } from 'react'
-import { ScriptElementKindModifier } from 'typescript'
-import { FIELDH, FIELDW, MINESCOUNT } from '../../types/cont'
-import { EnumCell } from '../../types/enums'
-import { TypeCell } from '../../types/types'
-import { genereteMines, mineCells } from '../../utils/utils'
+import { useEffect } from 'react'
+import { cellClick, isWin, newGame, setRightClick } from '../../store/actions/gameActions'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { cellsAll, gameActions } from '../../store/reducers/gameReducer'
+import { mouseActions } from '../../store/reducers/mouseReducer'
+import { EnumCell, SmileStatus } from '../../types/enums'
 import Cell from '../cell/Cell'
 import styles from './field.module.scss'
 
-const arrValues: TypeCell[] = Array(FIELDW * FIELDH)
-  .fill(0)
-  .map((elem, index) => ({
-    type: EnumCell.common,
-    isMine: false,
-    id: index,
-  }))
-genereteMines().map((posit) => (arrValues[posit].isMine = true))
-
 const Field = () => {
-  const [allCells, setAllCells] = useState<TypeCell[]>([] as TypeCell[])
-  const [isGame, setIsGame] = useState<boolean>()
+  const { isGame } = useAppSelector((state) => state.game)
+  const { isPressed } = useAppSelector((state) => state.mouse)
+  const cells = useAppSelector((state) => cellsAll(state.game))
+
   useEffect(() => {
-    setAllCells(arrValues)
-    setIsGame(true)
+    dispatch(newGame())
   }, [])
 
+  const dispatch = useAppDispatch()
   const handleRightButton = (id: number) => {
     if (!isGame) return
-    const prev: TypeCell[] = [...allCells]
-    if (prev[id].type == EnumCell.flag) {
-      prev[id].type = EnumCell.question
-    } else if (prev[id].type == EnumCell.common) {
-      prev[id].type = EnumCell.flag
-    } else prev[id].type = EnumCell.common
-    setAllCells(prev)
+    dispatch(setRightClick(id))
+    dispatch(isWin())
   }
-  const handleClick = (id: number) => {
+
+  const handleOnMouseDown = (id: number) => {
     if (!isGame) return
-    // const prev: TypeCell[] = JSON.parse(JSON.stringify(allCells)) as TypeCell[]
-    const prev: TypeCell[] = [...allCells]
-
-    if (prev[id].type != EnumCell.flag && prev[id].type != EnumCell.question) {
-      if (prev[id].isMine) {
-        setIsGame(false)
-        prev[id].type = EnumCell.error
-        prev.forEach((cell) => {
-          if (cell.id != id && cell.isMine && cell.type != EnumCell.flag) cell.type = EnumCell.mine
-        })
-      } else mineCells(prev, id)
+    dispatch(mouseActions.setIsPressed(true))
+    if (!cells[id].isOpened) {
+      dispatch(gameActions.updateCell({ id: id, changes: { type: EnumCell.pressed } }))
+      dispatch(gameActions.setSmileStaus(SmileStatus.suprise))
     }
-
-    setAllCells(prev)
   }
+  const handleOnMouseUp = (id: number) => {
+    if (!isGame) return
+    if (!cells[id].isOpened) {
+      dispatch(cellClick(id))
+    }
+  }
+  const handleOnMouseEnter = (id: number) => {
+    if (!isGame) return
+    if (isPressed && !cells[id].isOpened && cells[id].type == EnumCell.common) {
+      dispatch(gameActions.updateCell({ id: id, changes: { type: EnumCell.pressed } }))
+      dispatch(gameActions.setSmileStaus(SmileStatus.suprise))
+    }
+    if (isPressed && cells[id].isOpened && !cells[id].isMine)
+      dispatch(gameActions.setSmileStaus(SmileStatus.common))
+  }
+  const handleOnMouseLeave = (id: number) => {
+    if (!isGame) return
+    if (isPressed && !cells[id].isOpened && cells[id].type == EnumCell.pressed)
+      dispatch(gameActions.updateCell({ id: id, changes: { type: EnumCell.common } }))
+    if (isPressed && cells[id].isOpened && !cells[id].isMine)
+      dispatch(gameActions.setSmileStaus(SmileStatus.common))
+  }
+
+  const handleFieldLeave = () => {
+    if (!isGame) return
+    if (isPressed) dispatch(gameActions.setSmileStaus(SmileStatus.common))
+  }
+
   return (
-    <div className={styles.field}>
-      {allCells &&
-        allCells.map((cell) => (
-          <Cell
-            key={cell.id}
-            typeCell={cell}
-            onClick={handleClick}
-            onContextMenu={handleRightButton}
-          />
-        ))}
+    <div className={styles.field} onMouseLeave={handleFieldLeave}>
+      {cells.map((cell) => (
+        <Cell
+          key={cell.id}
+          typeCell={cell}
+          onMouseDown={handleOnMouseDown}
+          onMouseUp={handleOnMouseUp}
+          onContextMenu={handleRightButton}
+          onMouseEnter={handleOnMouseEnter}
+          onMouseLeave={handleOnMouseLeave}
+        />
+      ))}
     </div>
   )
 }

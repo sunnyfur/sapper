@@ -16,3 +16,11 @@ export enum EnumCell {
   cell7 = 7,
   cell8 = 8,
 }
+
+export enum SmileStatus {
+  common = 'smile',
+  suprise = 'smile_o',
+  sad = 'smile_sad',
+  success = 'smile_success',
+  presed = 'smile_pressed',
+}

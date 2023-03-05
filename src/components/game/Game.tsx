@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 
-const Game = ({ children }: { children: ReactNode }) => {
-  return <div>{children}</div>
+const Game = ({ children,className }: { children: ReactNode , className:string}) => {
+  return <div className={className}>{children}</div>
 }
 export default Game

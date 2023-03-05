@@ -3,4 +3,5 @@ export type TypeCell = {
   id: number
   type: EnumCell
   isMine: boolean
+  isOpened: boolean
 }
